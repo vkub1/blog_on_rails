@@ -6,3 +6,13 @@
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
 
+Post.destroy_all
+
+50.times do
+    created_at = Faker::Date.backward(days:365 * 5)
+    Post.create(
+        title: Faker::Book.title,
+        body: Faker::Lorem.paragraph_by_chars(number: rand(51..200), supplemental: false)
+    )
+end
+
