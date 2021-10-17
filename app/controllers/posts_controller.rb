@@ -1,5 +1,5 @@
 class PostsController < ApplicationController
-    before_action :get_post, only:[:show]
+    before_action :get_post, only:[:show, :destroy]
     def index
         @posts = Post.all.order(created_at: :desc)
     end
@@ -20,6 +20,12 @@ class PostsController < ApplicationController
 
     def show
 
+    end
+
+    def destroy
+        @post.destroy
+        flash[:info] = "Post deleted!"
+        redirect_to posts_path
     end
 
     private

@@ -91,9 +91,31 @@ RSpec.describe PostsController, type: :controller do
             make_show_request
             expect(assigns(:post)).to(eq(@post))  
         end
-        
+    end
+
+    describe "#destroy" do
+        def make_destroy_request
+            @post = FactoryBot.create(:post)
+            delete(:destroy, params:{ id:@post.id})
+        end
+
+        it "should remove a post from the database" do
+            make_destroy_request
+            expect(Post.find_by(id: @post.id)).to(be(nil))  
+        end
+
+        it "should redirect to the post index" do
+            make_destroy_request
+            expect(response).to(redirect_to(posts_path))  
+        end
+
+        it "should set a flash message" do
+            make_destroy_request
+            expect(flash[:info]).to be  
+        end
         
     end
+    
     
     
 end
