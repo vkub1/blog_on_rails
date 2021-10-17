@@ -1,5 +1,5 @@
 class PostsController < ApplicationController
-    before_action :get_post, only:[:show, :destroy, :edit]
+    before_action :get_post, only:[:show, :destroy, :edit, :update]
     def new
         @post = Post.new
     end
@@ -7,7 +7,7 @@ class PostsController < ApplicationController
     def create
         @post = Post.new(post_params)
         if @post.save
-            flash[:notice] = "Post successfully created"
+            flash[:success] = "Post successfully created"
             redirect_to post_path(@post.id)
         else 
             render :new
@@ -30,6 +30,15 @@ class PostsController < ApplicationController
 
     def edit
 
+    end
+
+    def update
+        if @post.update(post_params)
+            flash[:success] = "Post updated!"
+            redirect_to post_path(@post.id)
+        else
+            render :edit
+        end
     end
 
     private

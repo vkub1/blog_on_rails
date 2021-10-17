@@ -52,7 +52,7 @@ RSpec.describe PostsController, type: :controller do
 
             it "should set a flash message" do
                 valid_param_request
-                expect(flash[:notice]).to be  
+                expect(flash[:success]).to be  
             end
         end
             
@@ -138,10 +138,43 @@ RSpec.describe PostsController, type: :controller do
             make_edit_request
             expect(assigns(:post)).to(eq(@post))  
         end
-        
     end
     
-    
-    
+    describe "#update" do
+        before do
+            @post = Post.create(
+                title: 'some title',
+                body: 'some body'*25,
+            )
+        end
+        context "with valid params" do
+            it "should update the post record with new atrributes" do
+                new_title = "#{@post.title} editted"
+                patch(:update, params:{id:@post.id, post:{title:new_title}})
+                expect(@post.reload.title).to(eq(new_title))  
+            end
+
+            it "should redirect to show page" do
+                new_title = "#{@post.title} editted"
+                patch(:update, params:{id:@post.id, post:{title:new_title}})
+                expect(response).to(redirect_to(post_path(@post.id))) 
+            end
+        end
+
+        context "with invalid params" do
+            it "should not update the post record" do
+                patch(:update, params:{id:@post.id, post:{title:nil}})
+                expect(@post.reload.title).to(eq(@post.title))  
+            end
+            
+            it "should render the edit page" do
+                patch(:update, params:{id:@post.id, post:{title:nil}})
+                expect(response).to(render_template(:edit))  
+            end
+            
+        end
+        
+        
+    end
     
 end
