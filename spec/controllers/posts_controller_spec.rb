@@ -14,7 +14,20 @@ RSpec.describe PostsController, type: :controller do
             get(:index)
             expect(assigns(:posts)).to(eq([third_post, second_post, first_post]))
         end
+    end
+
+    describe "#new" do
+        it "should render a new template" do
+            get(:new)
+            expect(response).to(render_template(:new))  
+        end
+
+        it "should set a new instance variable @post" do
+            get(:new)
+            expect(assigns(:post)).to(be_a_new(Post))  
+        end
         
         
     end
+    
 end

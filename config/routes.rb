@@ -1,4 +1,4 @@
 Rails.application.routes.draw do
-  get('/', {to:'posts#index'})
-  resources :posts, only: [:index]
+  get('/', {to:'posts#index', as: :root})
+  resources :posts, only: [:index, :new]
 end
