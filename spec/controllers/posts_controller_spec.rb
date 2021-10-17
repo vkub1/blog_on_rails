@@ -49,26 +49,31 @@ RSpec.describe PostsController, type: :controller do
                 post = Post.last
                 expect(response).to(redirect_to post_path(post.id))  
             end
+
+            it "should set a flash message" do
+                valid_param_request
+                expect(flash[:notice]).to be  
+            end
+        end
             
-            context "with invalid params" do
-                def invalid_params_request
-                    post(:create, params:{ post: {
-                        title: 'some title',
-                        body: 'some body',
-                    }})
-                end
+        context "with invalid params" do
+            def invalid_params_request
+                post(:create, params:{ post: {
+                    title: 'some title',
+                    body: 'some body',
+                }})
+            end
 
-                it "should not create a post in the database" do
-                    count_before = Post.count
-                    invalid_params_request
-                    count_after = Post.count
-                    expect(count_after).to(eq(count_before))  
-                end
+            it "should not create a post in the database" do
+                count_before = Post.count
+                invalid_params_request
+                count_after = Post.count
+                expect(count_after).to(eq(count_before))  
+            end
 
-                it "should render the new template" do
-                    invalid_params_request
-                    expect(response).to(render_template(:new))  
-                end
+            it "should render the new template" do
+                invalid_params_request
+                expect(response).to(render_template(:new))  
             end   
         end
     end
@@ -113,8 +118,29 @@ RSpec.describe PostsController, type: :controller do
             make_destroy_request
             expect(flash[:info]).to be  
         end
+    end
+
+    describe "#edit" do
+        def make_edit_request
+            @post = Post.create(
+                title: 'some title',
+                body: 'some body' * 25
+            )
+            get(:edit, params:{id: @post.id})
+        end
+
+        it "should render the edit template" do
+            make_edit_request
+            expect(response).to(render_template(:edit))  
+        end
+
+        it "should set an instance variable @post for the edit template" do
+            make_edit_request
+            expect(assigns(:post)).to(eq(@post))  
+        end
         
     end
+    
     
     
     

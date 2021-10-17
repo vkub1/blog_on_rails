@@ -1,9 +1,5 @@
 class PostsController < ApplicationController
-    before_action :get_post, only:[:show, :destroy]
-    def index
-        @posts = Post.all.order(created_at: :desc)
-    end
-
+    before_action :get_post, only:[:show, :destroy, :edit]
     def new
         @post = Post.new
     end
@@ -18,6 +14,10 @@ class PostsController < ApplicationController
         end
     end
 
+    def index
+        @posts = Post.all.order(created_at: :desc)
+    end
+
     def show
 
     end
@@ -26,6 +26,10 @@ class PostsController < ApplicationController
         @post.destroy
         flash[:info] = "Post deleted!"
         redirect_to posts_path
+    end
+
+    def edit
+
     end
 
     private
