@@ -69,9 +69,27 @@ RSpec.describe PostsController, type: :controller do
                     invalid_params_request
                     expect(response).to(render_template(:new))  
                 end
-                
-            end
-            
+            end   
+        end
+    end
+    
+    describe "#show" do
+        def make_show_request
+            @post = Post.create(
+                title: 'some title',
+                body: 'some body' * 25
+            )
+            get(:show, params:{id: @post.id})
+        end
+
+        it "should render show template" do
+            make_show_request
+            expect(response).to(render_template(:show))  
+        end
+
+        it "should set an instance variable @post for the show template" do
+            make_show_request
+            expect(assigns(:post)).to(eq(@post))  
         end
         
         
