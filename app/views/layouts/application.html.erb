@@ -29,6 +29,22 @@
             <li class="nav-item">
                 <%= link_to "Home", root_path, class: "nav-link text-primary"%>
             </li>
+            <% if current_user.present? %>
+              <li class="nav-item">
+                <%= link_to "Logout", session_path, method: :delete, data: {confirm: "Are you sure you want to logout?"}, class: "nav-link text-primary" %>
+              </li>
+              <li class="nav-item">
+                <%= link_to current_user.name, edit_user_path(current_user.id), class: "nav-link text-primary" %>
+              </li>
+            <% else %>
+              <li class="nav-item">
+                <%= link_to "Sign Up", new_user_path, class: "nav-link text-primary"%>
+              </li>
+              <li class="nav-item">
+                <%= link_to "Login", new_session_path, class: "nav-link text-primary"%>
+              </li>
+            <% end %>
+            
             <li class="nav-item">
                 <%= link_to "New Post", new_post_path, class: "nav-link text-primary"%>
             </li>
@@ -45,6 +61,13 @@
       <div class="alert alert-primary alert-dismissible fade show mx-3" role="alert">
         <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Info:"><use xlink:href="#info-fill"/></svg>
         <%= flash[:info]%>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    <% end %>
+    <% if flash[:alert] %>
+      <div class="alert alert-danger alert-dismissible fade show mx-3" role="alert">
+        <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Danger:"><use xlink:href="#exclamation-triangle-fill"/></svg>
+        <%= flash[:alert]%>
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
       </div>
     <% end %>

@@ -1,11 +1,14 @@
 class PostsController < ApplicationController
     before_action :get_post, only:[:show, :destroy, :edit, :update]
+    before_action :authenticated_user!, except: [:index, :show]
+    before_action :authorize_user!, only: [:update, :destroy]
     def new
         @post = Post.new
     end
 
     def create
         @post = Post.new(post_params)
+        @post.user = current_user
         if @post.save
             flash[:success] = "Post successfully created"
             redirect_to post_path(@post.id)
@@ -50,5 +53,9 @@ class PostsController < ApplicationController
 
     def post_params
         params.require(:post).permit(:title, :body)
+    end
+
+    def authorize_user!
+        redirect_to root_path, alert: "Not authorized" unless can?(:crud, @post)
     end
 end
