@@ -35,18 +35,23 @@ class UsersController < ApplicationController
     end
 
     def update_password
-        if (params[:current_password] != params[:new_password])
-            if @user.update(
-                password: params[:new_password],
-                password_confirmation: params[:new_password_confirm]
-            )
-            flash[:success] = "Password updated!"
-            redirect_to root_path
-            else
+        if (current_user.authenticate(params[:current_password]))
+            if (params[:current_password] != params[:new_password])
+                if @user.update(
+                    password: params[:new_password],
+                    password_confirmation: params[:new_password_confirm]
+                )
+                flash[:success] = "Password updated!"
+                redirect_to root_path
+                else
+                    render :change_password
+                end
+            else 
+                @user.errors.add(:password, "current and new can't be the same")
                 render :change_password
             end
-        else 
-            @user.errors.add(:password, "current and new can't be the same")
+        else
+            flash[:alert] = "Incorrect current password"
             render :change_password
         end
     end
